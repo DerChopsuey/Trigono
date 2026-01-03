@@ -308,7 +308,21 @@ function starteScan(kartenNummer) {
 
     html5QrCode.start(
         { facingMode: "environment" }, 
-        { fps: 10, qrbox: { width: 250, height: 250 } },
+        { 
+        fps: 10, 
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+            // Das sorgt dafür, dass das Feld immer ein Quadrat ist, 
+            // egal wie breit das Handy-Display ist
+            const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+            const edgeSize = Math.floor(minEdge * 0.7); // 70% der kleinsten Seite
+            return { width: edgeSize, height: edgeSize };
+        }
+		},
+		
+		
+		
+		
+		
         (decodedText) => {
             const daten = decodedText.split(';');
             if(daten.length >= 4) {
