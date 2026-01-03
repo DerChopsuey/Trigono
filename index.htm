@@ -1,0 +1,367 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <title>Trigono</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="mobile-web-app-capable" content="yes">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2270%22 font-family=%22Arial%22 font-weight=%22bold%22>T</text></svg>">
+	<!--
+	<style>
+        #reader { width: 100%; max-width: 500px; margin-bottom: 20px; background: #f0f0f0; }
+        td { text-align: center; padding: 5px; }
+    </style>
+	-->
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style>
+	* { 
+    box-sizing: border-box; 
+	}
+	
+	body { 
+        height: 100vh; 
+        width: 100vw; 
+        margin: 0px; 
+        padding: 0px;
+        overflow: hidden; 
+        display: flex;
+        flex-direction: column;
+		background-color: #F4F7F6; 
+    }
+	
+	.handy-box {
+    width: 100vw;       /* Exakt 100% Bildschirmbreite */
+    height: 100vh;      /* Exakt 100% Bildschirmhöhe */
+    padding: 5px;      /* Dein Sicherheitsabstand zum Rand */
+    overflow: hidden;   /* Verhindert das "Rausfließen" nach rechts/unten */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box; /* WICHTIG: Padding wird nach innen gerechnet */
+}
+
+    
+    /* Tabelle für Handys anpassen */
+	
+	/* Alle Zellen in der Haupttabelle bekommen diesen dezenten Trenner */
+	.handy-box > table > tbody > tr > td {
+	/*
+	border-left: 1px solid rgba(0, 0, 0, 0.5);
+	border-right: 1px solid rgba(0, 0, 0, 0.5);
+	*/
+
+	}
+
+	/* Entfernt den äußeren Rand ganz links und ganz rechts für den "offenen" Look */
+	.handy-box > table > tbody > tr > td:first-child { border-left: none; }
+	.handy-box > table > tbody > tr > td:last-child { border-right: none; }
+	
+	/* Nur die Zellen in den ersten drei Zeilen (1. Kopf, 2. Orte, 3. Teilstrecken) bekommen Trenner */
+	.handy-box > table > tbody > tr:nth-child(-n+2) > td {
+		border-left: 2px solid rgba(255, 255, 255, 1);
+		border-right: 2px solid rgba(255, 255, 255, 1);
+	}
+
+	/* Entfernt den äußeren Rand ganz links und ganz rechts (nur für die ersten 3 Zeilen) */
+	.handy-box > table > tbody > tr:nth-child(-n+3) > td:first-child { 
+		border-left: none; 
+	}
+	.handy-box > table > tbody > tr:nth-child(-n+3) > td:last-child { 
+		border-right: none; 
+	}
+
+	/* WICHTIG: Damit die Zellen ab Zeile 4 (Gesamtstrecke & Buttons) sauber ohne Rahmen sind */
+	.handy-box > table > tbody > tr:nth-child(n+4) > td {
+		border: none !important;
+	}
+	
+	
+    table { 
+			width: 100% !important; 
+			table-layout: fixed;
+			border-collapse: collapse; 
+			margin: 0px; 
+			}
+	table table td {
+		border: none !important;
+	}		
+	
+    td { padding: 0px; font-size: 14px; background: white; }
+	
+	/* Erlaubt Rundungen für Tabellenzellen */
+	.main-table td {
+		overflow: hidden; 
+	}
+
+	/* Die Rundung für die oberen Ecken (Start/Nummern) */
+	.round-top {
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+		text-align:center;
+	}
+
+	/* Die Rundung für die unteren Ecken (PLZ-Felder) */
+	.round-bottom {
+		border-bottom-left-radius: 4px;
+		border-bottom-right-radius: 4px;
+	}
+	
+	
+	
+	
+	
+
+    /* Scanner-Bereich */
+	#reader {
+		width: 100% !important;
+		max-width: 400px;
+		height: 250px; /* Feste Höhe, damit nichts springt */
+		margin: 0 auto 10px;
+		border: 2px dashed #ccc; /* Gestrichelter Rand für "Scan-Optik" */
+		border-radius: 8px;
+		background-color: #eee;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		overflow: hidden;
+	}
+
+	/* Ziel: Alle Spans, deren Klasse mit "k" beginnt (k1-wert0, k2-wert0, etc.) */
+	span[class^="k"] {
+		display: block;           /* Macht aus dem Text eine Box, die umbrechen kann */
+		width: 100%;              /* Nutzt die volle Breite der Tabellenzelle */
+		min-height: 2.4em;        /* Erzwingt Platz für exakt 2 Zeilen (auch wenn der Name kurz ist) */
+		font-size: 11px;          /* Klein genug für lange Namen */
+		line-height: 1.1;         /* Enger Zeilenabstand, damit es kompakt bleibt */
+		word-break: break-all;    /* Notfall-Umbruch: Trennt "Westersunderberg" überall */
+		hyphens: auto;            /* Schickere Trennung, wenn das Handy es unterstützt */
+		text-align: center;
+		font-family: "Arial Narrow", ArialCondensed, "Trebuchet MS", Arial, sans-serif;
+		letter-spacing: -0.5px;
+		font-weight: bold;
+		overflow: hidden;         /* Schneidet nichts ab, aber hält die Box sauber */
+	}
+
+	/* Optional: Wenn du die PLZ (wert1) etwas dezenter willst */
+	span[class$="-wert1"] {
+		color: #666;
+		font-size: 11px;
+		font-weight: normal;
+		min-height: 1.2em;        /* PLZ braucht meist nur eine Zeile */
+	}
+
+
+
+    /* Große, gut drückbare Buttons */
+    button { 
+        width: 100%; 
+        padding: 12px; 
+        font-size: 16px; 
+        font-weight: bold;
+        background-color: #007bff; 
+        color: white; 
+        border: none; 
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:active { background-color: #0056b3; }
+    #neu { background-color: #dc3545; margin-top: 0px; }
+	
+	#stop-btn {
+	/* Dauerhafter Platzhalter */
+		visibility: visible !important; 
+		opacity: 1 !important;
+		
+		/* Design */
+		margin: 5px auto;
+		width: 100%;
+		max-width: 400px;
+		padding: 12px;
+		background-color: #6c757d;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		font-weight: bold;
+		transition: opacity 0.3s ease; /* Schickes Einblenden */
+	}
+
+	/* Wenn wir eine Klasse hinzufügen, wird er sichtbar */
+	#stop-btn.visible {
+		visibility: visible;
+		opacity: 1;
+	}
+	
+	
+
+    /* Summen hervorheben */
+    [id^="sum-"] { 
+	font-weight: bold; color: #155724;
+	font-size: 12px;
+	font-family: "Arial Narrow", ArialCondensed, "Trebuchet MS", Arial, sans-serif;
+	text-align:center;
+	}
+	</style>
+	
+	
+	
+</head>
+<body>
+<div class="handy-box">
+	<div id="reader"></div>
+	<button id="stop-btn">Scan abbrechen</button>
+	<div id="result-text" style="font-family: Arial Narrow, ArialCondensed, Trebuchet MS, Arial, sans-serif; font-size:10px;">Status: Bereit zum Scannen</div>
+
+	<table border="0">
+		<tr style="font-family: Arial Narrow, ArialCondensed, Trebuchet MS, Arial, sans-serif; font-weight: bold; font-size: 11px;">
+<td class="round-top" style="background-color:#FFD8B1;">1 (Start)</td>
+    <td class="round-top" style="background-color:#B6D8F2;">2</td>
+    <td class="round-top" style="background-color:#B6D8F2;">3</td>
+    <td class="round-top" style="background-color:#B6D8F2;">4</td>
+    <td class="round-top" style="background-color:#FFD8B1;">5 (Ende)</td>
+</tr>
+		<tr>
+			<td><table border="0">
+				<tr><td style="background-color:#FFE8D1;"><span class="k1-wert0">Westersunderberg</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#FFE8D1;"><span class="k1-wert1">PLZ 1</span></td></tr>
+			</table></td>
+			<td><table border="0">
+				<tr><td style="background-color:#E3F2FD;"><span class="k2-wert0">Westersunderberg</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k2-wert1" >PLZ 2</span></td></tr>
+			</table></td>
+			<td><table border="0">
+				<tr><td style="background-color:#E3F2FD;"><span class="k3-wert0">Westersunderberg</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k3-wert1">PLZ 3</span></td></tr>
+			</table></td>
+			<td><table border="0">
+				<tr><td style="background-color:#E3F2FD;"><span class="k4-wert0">Westersunderberg</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k4-wert1">PLZ 4</span></td></tr>
+			</table></td>
+			<td><table border="0">
+				<tr><td style="background-color:#FFE8D1;"><span class="k5-wert0">Westersunderberg</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#FFE8D1;"><span class="k5-wert1">PLZ 5</span></td></tr>
+			</table></td>
+		</tr>
+		<tr style="border-top: 5px solid white;">
+			<td style="background-color:#D4EDDA;"></td>
+			<td id="sum-1-2" style="background-color:#D4EDDA; color:#3e7d4d;">0.00 km</td>
+			<td id="sum-2-3" style="background-color:#D4EDDA; color:#3e7d4d;">0.00 km</td>
+			<td id="sum-3-4" style="background-color:#D4EDDA; color:#3e7d4d;">0.00 km</td>
+			<td id="sum-4-5" style="background-color:#D4EDDA; color:#3e7d4d;">0.00 km</td>
+		</tr>
+		<tr>
+			<td colspan="5" id="sum-all" style="background-color:#D4EDDA; font-size:15px;">Gesamtstrecke: 0.00 km</td>
+		</tr>
+		<tr>
+			<td style="padding: 2px;"><button id="K1" style="height:60px;">Scan</button></td>
+			<td style="padding: 2px;"><button id="K2" style="height:60px;">Scan</button></td>
+			<td style="padding: 2px;"><button id="K3" style="height:60px;">Scan</button></td>
+			<td style="padding: 2px;"><button id="K4" style="height:60px;">Scan</button></td>
+			<td style="padding: 2px;"><button id="K5" style="height:60px;">Scan</button></td>
+		</tr>
+		<tr>
+			<td colspan="5" style="vertical-align: top; padding: 0;"><button id="neu">Neue Route</button></td>
+		</tr>
+	</table>
+</div>
+
+
+<script>
+const html5QrCode = new Html5Qrcode("reader");
+
+// Speicher für alle Koordinaten (0 bis 4 für Karte 1 bis 5)
+let koordinaten = [null, null, null, null, null];
+let teilstrecken = [0, 0, 0, 0]; 
+
+// Die Haversine-Formel zur Distanzberechnung
+function berechneDistanz(punkt1, punkt2) {
+    if (!punkt1 || !punkt2) return 0;
+    const R = 6371; 
+    const dLat = (punkt2.lat - punkt1.lat) * Math.PI / 180;
+    const dLon = (punkt2.lon - punkt1.lon) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(punkt1.lat * Math.PI / 180) * Math.cos(punkt2.lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; 
+}
+
+function updateSummen() {
+    let gesamt = 0;
+    for (let i = 0; i < 4; i++) {
+        if (koordinaten[i] && koordinaten[i+1]) {
+            const d = berechneDistanz(koordinaten[i], koordinaten[i+1]);
+            teilstrecken[i] = d;
+            document.getElementById(`sum-${i+1}-${i+2}`).innerText = d.toFixed(2) + " km";
+        }
+        gesamt += teilstrecken[i];
+    }
+    document.getElementById('sum-all').innerText = "Gesamtstrecke: " + gesamt.toFixed(2) + " km";
+}
+
+// DIE ZENTRALE FUNKTION
+function starteScan(kartenNummer) {
+    document.getElementById('stop-btn').classList.add('visible');
+    document.getElementById('result-text').innerText = "Status: Suche QR-Code für Karte " + kartenNummer + "...";
+
+    html5QrCode.start(
+        { facingMode: "environment" }, 
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText) => {
+            const daten = decodedText.split(';');
+            if(daten.length >= 4) {
+                document.querySelector(`.k${kartenNummer}-wert0`).innerText = daten[0];
+                document.querySelector(`.k${kartenNummer}-wert1`).innerText = daten[1];
+
+                koordinaten[kartenNummer - 1] = {
+                    lat: parseFloat(daten[2].replace(',', '.')),
+                    lon: parseFloat(daten[3].replace(',', '.'))
+                };
+                updateSummen();
+            }
+
+            // Erstmal den aktuellen Scan beenden
+            html5QrCode.stop().then(() => {
+                document.getElementById('stop-btn').classList.remove('visible');
+                document.getElementById('result-text').innerText = "Status: Karte " + kartenNummer + " erledigt.";
+
+                // AUTOMATIK-LOGIK:
+                // Wenn wir noch nicht bei Karte 5 sind, starte nach 500ms die nächste Karte
+                if (kartenNummer < 5) {
+                    setTimeout(() => {
+                        starteScan(kartenNummer + 1);
+                    }, 500); 
+                }
+            });
+        }
+    ).catch(err => {
+        console.error(err);
+        document.getElementById('result-text').innerText = "Status: Kamerafehler!";
+    });
+}
+
+// Funktion zum sauberen Schließen
+function beendeScan() {
+    html5QrCode.stop().then(() => {
+        // Button wieder unsichtbar machen
+        document.getElementById('stop-btn').classList.remove('visible');
+        document.getElementById('result-text').innerText = "Bereit.";
+    });
+}
+
+// Event Listener
+document.getElementById('stop-btn').onclick = beendeScan;
+
+document.getElementById('K1').onclick = () => starteScan(1);
+document.getElementById('K2').onclick = () => starteScan(2);
+document.getElementById('K3').onclick = () => starteScan(3);
+document.getElementById('K4').onclick = () => starteScan(4);
+document.getElementById('K5').onclick = () => starteScan(5);
+
+document.getElementById('neu').onclick = () => location.reload();
+</script>
+
+</body>
+</html>
