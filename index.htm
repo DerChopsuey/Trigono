@@ -129,6 +129,19 @@
 		position: relative;
 		overflow: hidden;
 	}
+	
+	
+	#reader__scan_region {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	}
+
+	#reader__scan_region video {
+		width: 100% !important;
+		height: 100% !important;
+		object-fit: cover !important;
+	}
 
 	/* Ziel: Alle Spans, deren Klasse mit "k" beginnt (k1-wert0, k2-wert0, etc.) */
 	span[class^="k"] {
