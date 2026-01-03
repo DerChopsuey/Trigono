@@ -131,17 +131,25 @@
 	}
 	
 	
-	#reader__scan_region {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	}
-
-	#reader__scan_region video {
+	/* Zwingt das Video, das Feld ohne Verzerrung auszufüllen */
+	#reader video {
 		width: 100% !important;
 		height: 100% !important;
 		object-fit: cover !important;
 	}
+
+	/* Entfernt die "Torbögen" (Schatten-Overlays der Library) */
+	#reader__scan_region {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+	}
+
+	#reader__shading {
+		border-radius: 0 !important; /* Verhindert Rundungen im Scan-Fokus */
+	}
+
+
 
 	/* Ziel: Alle Spans, deren Klasse mit "k" beginnt (k1-wert0, k2-wert0, etc.) */
 	span[class^="k"] {
@@ -321,16 +329,12 @@ function starteScan(kartenNummer) {
 
     html5QrCode.start(
         { facingMode: "environment" }, 
-        { 
-        fps: 10, 
-        qrbox: (viewfinderWidth, viewfinderHeight) => {
-            // Das sorgt dafür, dass das Feld immer ein Quadrat ist, 
-            // egal wie breit das Handy-Display ist
-            const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-            const edgeSize = Math.floor(minEdge * 0.7); // 70% der kleinsten Seite
-            return { width: edgeSize, height: edgeSize };
-        }
-		},
+		{ 
+            fps: 15, // Etwas flüssiger
+            qrbox: { width: 200, height: 200 }, // Festes Maß statt Funktion verhindert Berechnungsfehler
+            aspectRatio: 1.0 // ZWINGT das Video in ein Quadrat
+        },
+	
 		
 		
 		
