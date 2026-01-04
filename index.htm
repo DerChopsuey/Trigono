@@ -295,13 +295,14 @@
 </div>
 
 
-<script>const html5QrCode = new Html5Qrcode("reader");
+<script>
+const html5QrCode = new Html5Qrcode("reader");
 
 // Speicher für alle Koordinaten (0 bis 4 für Karte 1 bis 5)
 let koordinaten = [null, null, null, null, null];
 let teilstrecken = [0, 0, 0, 0]; 
 
-let scanSperre = false;
+let scanAktiv = true;
 
 // Die Haversine-Formel zur Distanzberechnung
 function berechneDistanz(punkt1, punkt2) {
@@ -333,63 +334,63 @@ function starteScan(kartenNummer) {
     document.getElementById('stop-btn').classList.add('visible');
     document.getElementById('result-text').innerText = "Status: Suche QR-Code für Karte " + kartenNummer + "...";
 
-    // Falls die Kamera schon läuft, nicht neu starten, sondern nur kartenNummer merken
-    // Aber für den ersten Start oder manuelle K-Buttons:
-    if (!html5QrCode.isScanning) {
-        html5QrCode.start(
-            { facingMode: "environment" }, 
-            { 
-                fps: 15, 
-                qrbox: { width: 200, height: 200 }, 
-                aspectRatio: 1.0 
-            },
-            (decodedText) => handleScan(decodedText, kartenNummer)
-        ).catch(err => {
-            console.error(err);
-            document.getElementById('result-text').innerText = "Status: Kamerafehler!";
-        });
-    }
-}
-
-// Separate Funktion für das, was nach dem Erkennen passiert
-function handleScan(decodedText, kartenNummer) {
-    if (scanSperre) return;
-
-    const daten = decodedText.split(';');
-    if(daten.length >= 4) {
-        scanSperre = true; // Sperre an
-        
-        document.querySelector(`.k${kartenNummer}-wert0`).innerText = daten[0];
-        document.querySelector(`.k${kartenNummer}-wert1`).innerText = daten[1];
-
-        koordinaten[kartenNummer - 1] = {
-            lat: parseFloat(daten[2].replace(',', '.')),
-            lon: parseFloat(daten[3].replace(',', '.'))
-        };
-        updateSummen();
-
-        if (kartenNummer < 5) {
-            document.getElementById('result-text').innerText = "Karte " + kartenNummer + " OK! Nächste Karte in 2s...";
+    html5QrCode.start(
+        { facingMode: "environment" }, 
+		{ 
+            fps: 15, // Etwas flüssiger
+            qrbox: { width: 200, height: 200 }, // Festes Maß statt Funktion verhindert Berechnungsfehler
+            aspectRatio: 1.0 // ZWINGT das Video in ein Quadrat
+        },
+	
+		
+		
+		
+		
+		
+(decodedText) => {
+            if (!scanAktiv) return; // Verhindert, dass während der Pause gescannt wird
             
-            setTimeout(() => {
-                scanSperre = false; // Sperre aufheben
-                starteScan(kartenNummer + 1); // Automatisch weiter
-            }, 2500); 
-        } else {
-            document.getElementById('result-text').innerText = "Status: Alle Karten fertig.";
-            setTimeout(() => { scanSperre = false; }, 2000);
+            const daten = decodedText.split(';');
+            if(daten.length >= 4) {
+                scanAktiv = false; // "Sicherung" raus
+
+                // 1. Daten schreiben
+                document.querySelector(`.k${kartenNummer}-wert0`).innerText = daten[0];
+                document.querySelector(`.k${kartenNummer}-wert1`).innerText = daten[1];
+                koordinaten[kartenNummer - 1] = {
+                    lat: parseFloat(daten[2].replace(',', '.')),
+                    lon: parseFloat(daten[3].replace(',', '.'))
+                };
+                updateSummen();
+
+                // 2. Kamera SOFORT schließen
+                html5QrCode.stop().then(() => {
+                    document.getElementById('result-text').innerText = "Karte " + kartenNummer + " erfasst! Kurze Pause...";
+
+                    // 3. Nach einer Sekunde Ruhe die nächste Karte freigeben
+                    setTimeout(() => {
+                        scanAktiv = true; // Sicherung wieder rein
+                        if (kartenNummer < 5) {
+                            starteScan(kartenNummer + 1);
+                        } else {
+                            document.getElementById('result-text').innerText = "Alle Karten fertig!";
+                        }
+                    }, 1500); // 1,5 Sekunden echte Pause (Kamera ist aus)
+                });
+            }
         }
-    }
+    ).catch(err => {
+        console.error(err);
+    });
 }
 
 // Funktion zum sauberen Schließen
-function beendeScan() {
-    html5QrCode.stop().then(() => {
-        document.getElementById('stop-btn').classList.remove('visible');
-        document.getElementById('result-text').innerText = "Bereit.";
-    }).catch(err => {
-        console.log("Scanner war nicht aktiv.");
-    });
+//function beendeScan() {
+//   html5QrCode.stop().then(() => {
+        // Button wieder unsichtbar machen
+//        document.getElementById('stop-btn').classList.remove('visible');
+//       document.getElementById('result-text').innerText = "Bereit.";
+//    });
 }
 
 // Event Listener
