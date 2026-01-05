@@ -33,7 +33,7 @@ Die Karten verfügen über **QR-Codes**, in denen die Koordinaten der Orte gespe
 
 ##  Siegbedingung
 Gespielt wird nach dem **Best-to-5-Prinzip**:
-* Notiere die Ergebnisse jeder Runde im beiliegenden **Scoreboard-File**.
+* Notiere die Ergebnisse jeder Runde im **Scoreboard**.
 * Wer zuerst **5 Runden** für sich entschieden hat, gewinnt das gesamte Spiel!
 
 ---
