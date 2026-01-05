@@ -46,3 +46,5 @@ Die App ist eine mobile Web-Anwendung, die Koordinaten via QR-Code einliest und 
 ## App Link
 https://derchopsuey.github.io/Trigono/ <br>
 <img src="./gfx/qr-code.png" width="256">
+<br>
+**Tipp:** Für das beste Erlebnis (Vollbild-App) einfach im Browser "Zum Startbildschirm hinzufügen" wählen.
