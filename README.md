@@ -41,10 +41,8 @@ Gespielt wird nach dem **Best-to-5-Prinzip**:
 ##  Technische Details
 Die App ist eine mobile Web-Anwendung, die Koordinaten via QR-Code einliest und mittels der **Haversine-Formel** die exakte Entfernung auf der Erdkugel berechnet.
 
-* **Technologien:** HTML5, CSS3, JavaScript
-* **Library:** html5-qrcode für das Scannen der Koordinaten
-
 
 
 ## App Link
 https://derchopsuey.github.io/Trigono/
+![QR-Code](./gfx/qr-code.png)
