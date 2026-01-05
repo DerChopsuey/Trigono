@@ -1,4 +1,4 @@
-# 📍 Trigono – Das GPS-Spiel
+# 📍 Trigono – Das Routen-Spiel
 
 Trigono ist ein kartenbasiertes Geografie-Spiel, bei dem es darum geht, die effizienteste Route zwischen zwei Punkten zu finden. Wer beweist das beste räumliche Gefühl für Distanzen?
 
