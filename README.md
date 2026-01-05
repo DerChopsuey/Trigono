@@ -1,6 +1,6 @@
 # 📍 Trigono – Das Routen-Spiel
 
-Trigono ist ein kartenbasiertes Geografie-Spiel, bei dem es darum geht, die effizienteste Route zwischen zwei Punkten zu finden. Wer beweist das beste räumliche Gefühl für Distanzen?
+Trigono ist ein kartenbasiertes Geografie-Spiel, bei dem es darum geht, die effizienteste Route zwischen zwei Punkten zu finden. Wer hat die besseren Ortskenntnisse?  Wer beweist das beste räumliche Gefühl für Distanzen?
 
 ---
 
