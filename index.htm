@@ -3,17 +3,12 @@
 <head>
     <script src="https://unpkg.com/html5-qrcode"></script>
 
-
-	<title>Trigono</title>
+    <title>Trigono</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="theme-color" content="#007bff"> <meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="#007bff">
-
-	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2254%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>T</text></svg>">
-	<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2254%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>T</text></svg>">
-		
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2270%22 font-family=%22Arial%22 font-weight=%22bold%22>T</text></svg>">
 	<!--
 	<style>
         #reader { width: 100%; max-width: 500px; margin-bottom: 20px; background: #f0f0f0; }
@@ -134,27 +129,6 @@
 		position: relative;
 		overflow: hidden;
 	}
-	
-	
-	/* Zwingt das Video, das Feld ohne Verzerrung auszufüllen */
-	#reader video {
-		width: 100% !important;
-		height: 100% !important;
-		object-fit: cover !important;
-	}
-
-	/* Entfernt die "Torbögen" (Schatten-Overlays der Library) */
-	#reader__scan_region {
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-	}
-
-	#reader__shading {
-		border-radius: 0 !important; /* Verhindert Rundungen im Scan-Fokus */
-	}
-
-
 
 	/* Ziel: Alle Spans, deren Klasse mit "k" beginnt (k1-wert0, k2-wert0, etc.) */
 	span[class^="k"] {
@@ -302,8 +276,6 @@ const html5QrCode = new Html5Qrcode("reader");
 let koordinaten = [null, null, null, null, null];
 let teilstrecken = [0, 0, 0, 0]; 
 
-let scanAktiv = true;
-
 // Die Haversine-Formel zur Distanzberechnung
 function berechneDistanz(punkt1, punkt2) {
     if (!punkt1 || !punkt2) return 0;
@@ -336,61 +308,47 @@ function starteScan(kartenNummer) {
 
     html5QrCode.start(
         { facingMode: "environment" }, 
-		{ 
-            fps: 15, // Etwas flüssiger
-            qrbox: { width: 200, height: 200 }, // Festes Maß statt Funktion verhindert Berechnungsfehler
-            aspectRatio: 1.0 // ZWINGT das Video in ein Quadrat
-        },
-	
-		
-		
-		
-		
-		
-(decodedText) => {
-            if (!scanAktiv) return; // Verhindert, dass während der Pause gescannt wird
-            
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText) => {
             const daten = decodedText.split(';');
             if(daten.length >= 4) {
-                scanAktiv = false; // "Sicherung" raus
-
-                // 1. Daten schreiben
                 document.querySelector(`.k${kartenNummer}-wert0`).innerText = daten[0];
                 document.querySelector(`.k${kartenNummer}-wert1`).innerText = daten[1];
+
                 koordinaten[kartenNummer - 1] = {
                     lat: parseFloat(daten[2].replace(',', '.')),
                     lon: parseFloat(daten[3].replace(',', '.'))
                 };
                 updateSummen();
-
-                // 2. Kamera SOFORT schließen
-                html5QrCode.stop().then(() => {
-                    document.getElementById('result-text').innerText = "Karte " + kartenNummer + " erfasst! Kurze Pause...";
-
-                    // 3. Nach einer Sekunde Ruhe die nächste Karte freigeben
-                    setTimeout(() => {
-                        scanAktiv = true; // Sicherung wieder rein
-                        if (kartenNummer < 5) {
-                            starteScan(kartenNummer + 1);
-                        } else {
-                            document.getElementById('result-text').innerText = "Alle Karten fertig!";
-                        }
-                    }, 1500); // 1,5 Sekunden echte Pause (Kamera ist aus)
-                });
             }
+
+            // Erstmal den aktuellen Scan beenden
+            html5QrCode.stop().then(() => {
+                document.getElementById('stop-btn').classList.remove('visible');
+                document.getElementById('result-text').innerText = "Status: Karte " + kartenNummer + " erledigt.";
+
+                // AUTOMATIK-LOGIK:
+                // Wenn wir noch nicht bei Karte 5 sind, starte nach 500ms die nächste Karte
+                if (kartenNummer < 5) {
+                    setTimeout(() => {
+                        starteScan(kartenNummer + 1);
+                    }, 500); 
+                }
+            });
         }
     ).catch(err => {
         console.error(err);
+        document.getElementById('result-text').innerText = "Status: Kamerafehler!";
     });
 }
 
 // Funktion zum sauberen Schließen
-//function beendeScan() {
-//   html5QrCode.stop().then(() => {
+function beendeScan() {
+    html5QrCode.stop().then(() => {
         // Button wieder unsichtbar machen
-//        document.getElementById('stop-btn').classList.remove('visible');
-//       document.getElementById('result-text').innerText = "Bereit.";
-//    });
+        document.getElementById('stop-btn').classList.remove('visible');
+        document.getElementById('result-text').innerText = "Bereit.";
+    });
 }
 
 // Event Listener
