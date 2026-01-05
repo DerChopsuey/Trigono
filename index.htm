@@ -361,12 +361,15 @@ function starteScan(kartenNummer) {
                 document.getElementById('result-text').innerText = "Status: Karte " + kartenNummer + " erledigt.";
 
                 // AUTOMATIK-LOGIK:
-                // Wenn wir noch nicht bei Karte 5 sind, starte nach 1000ms die nächste Karte
-                if (kartenNummer < 5) {
+                // Wenn wir noch nicht bei Karte 5 sind, starte nach 1000ms die nächste Karte. Automatisch nächste karte.
+                /*
+				if (kartenNummer < 5) {
                     setTimeout(() => {
                         starteScan(kartenNummer + 1);
                     }, 1000); 
                 }
+				*/
+				
             });
         }
     ).catch(err => {
