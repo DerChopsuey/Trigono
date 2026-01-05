@@ -97,6 +97,10 @@
 	.round-top {
 		border-top-left-radius: 4px;
 		border-top-right-radius: 4px;
+		font-family: Arial Narrow, ArialCondensed, Trebuchet MS, Arial, sans-serif; 
+		font-weight: bold; 
+		font-size: 13px;
+		color:#003366;
 		text-align:center;
 	}
 
@@ -152,19 +156,20 @@
 	span[class^="k"] {
 		display: block;           /* Macht aus dem Text eine Box, die umbrechen kann */
 		width: 100%;              /* Nutzt die volle Breite der Tabellenzelle */
-		min-height: 2.4em;        /* Erzwingt Platz für exakt 2 Zeilen (auch wenn der Name kurz ist) */
-		font-size: 11px;          /* Klein genug für lange Namen */
+		min-height: 3.5em;        /* Erzwingt Platz für exakt 2 Zeilen (auch wenn der Name kurz ist) */
+		font-size: 12px;          /* Klein genug für lange Namen */
 		line-height: 1.1;         /* Enger Zeilenabstand, damit es kompakt bleibt */
 		word-break: break-all;    /* Notfall-Umbruch: Trennt "Westersunderberg" überall */
 		hyphens: auto;            /* Schickere Trennung, wenn das Handy es unterstützt */
 		text-align: center;
 		font-family: "Arial Narrow", ArialCondensed, "Trebuchet MS", Arial, sans-serif;
+		color:#0056B3;
 		letter-spacing: -0.5px;
 		font-weight: bold;
 		overflow: hidden;         /* Schneidet nichts ab, aber hält die Box sauber */
 	}
 
-	/* Optional: Wenn du die PLZ (wert1) etwas dezenter willst */
+	/* Optional:PLZ (wert1) etwas dezenter */
 	span[class$="-wert1"] {
 		color: #666;
 		font-size: 11px;
@@ -234,7 +239,7 @@
 	<div id="result-text" style="font-family: Arial Narrow, ArialCondensed, Trebuchet MS, Arial, sans-serif; font-size:10px;">Status: Bereit zum Scannen</div>
 
 	<table border="0">
-		<tr style="font-family: Arial Narrow, ArialCondensed, Trebuchet MS, Arial, sans-serif; font-weight: bold; font-size: 11px;">
+		<tr>
 	<td class="round-top" style="background-color:#9FDBFF;">Start<br><img src="./gfx/pin_grun.png" style="height: 17px; width: auto;"></td>
     <td class="round-top" style="background-color:#B6D8F2;">Karte 1<br><img src="./gfx/dot.png" style="height: 9px; width: auto;"></td>
     <td class="round-top" style="background-color:#B6D8F2;">Karte 2<br><img src="./gfx/dot.png" style="height: 9px; width: auto;"></td>
