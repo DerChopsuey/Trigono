@@ -35,30 +35,22 @@
         overflow: hidden; 
         display: flex;
         flex-direction: column;
-		background-color: #F4F7F6; 
+		background-color: #ffffff; 
     }
 	
 	.handy-box {
-    width: 100vw;       /* Exakt 100% Bildschirmbreite */
-    height: 100vh;      /* Exakt 100% Bildschirmhöhe */
-    padding: 5px;      /* Dein Sicherheitsabstand zum Rand */
-    overflow: hidden;   /* Verhindert das "Rausfließen" nach rechts/unten */
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box; /* WICHTIG: Padding wird nach innen gerechnet */
-}
+		width: 100vw;       /* Exakt 100% Bildschirmbreite */
+		height: 100vh;      /* Exakt 100% Bildschirmhöhe */
+		padding: 5px;      /* Dein Sicherheitsabstand zum Rand */
+		overflow: hidden;   /* Verhindert das "Rausfließen" nach rechts/unten */
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box; /* WICHTIG: Padding wird nach innen gerechnet */
+	}
 
     
     /* Tabelle für Handys anpassen */
 	
-	/* Alle Zellen in der Haupttabelle bekommen diesen dezenten Trenner */
-	.handy-box > table > tbody > tr > td {
-	/*
-	border-left: 1px solid rgba(0, 0, 0, 0.5);
-	border-right: 1px solid rgba(0, 0, 0, 0.5);
-	*/
-
-	}
 
 	/* Entfernt den äußeren Rand ganz links und ganz rechts für den "offenen" Look */
 	.handy-box > table > tbody > tr > td:first-child { border-left: none; }
@@ -243,32 +235,32 @@
 
 	<table border="0">
 		<tr style="font-family: Arial Narrow, ArialCondensed, Trebuchet MS, Arial, sans-serif; font-weight: bold; font-size: 11px;">
-<td class="round-top" style="background-color:#FFD8B1;">1 (Start)</td>
-    <td class="round-top" style="background-color:#B6D8F2;">2</td>
-    <td class="round-top" style="background-color:#B6D8F2;">3</td>
-    <td class="round-top" style="background-color:#B6D8F2;">4</td>
-    <td class="round-top" style="background-color:#FFD8B1;">5 (Ende)</td>
+	<td class="round-top" style="background-color:#9FDBFF;">Start<br><img src="./gfx/pin_grun.png" style="height: 17px; width: auto;"></td>
+    <td class="round-top" style="background-color:#B6D8F2;">Karte 1<br><img src="./gfx/dot.png" style="height: 9px; width: auto;"></td>
+    <td class="round-top" style="background-color:#B6D8F2;">Karte 2<br><img src="./gfx/dot.png" style="height: 9px; width: auto;"></td>
+    <td class="round-top" style="background-color:#B6D8F2;">Karte 3<br><img src="./gfx/dot.png" style="height: 9px; width: auto;"></td>
+    <td class="round-top" style="background-color:#9FDBFF;">Ziel<br><img src="./gfx/pin_rot.png" style="height: 17px; width: auto;"></td>
 </tr>
 		<tr>
 			<td><table border="0">
-				<tr><td style="background-color:#FFE8D1;"><span class="k1-wert0">Westersunderberg</span></td></tr>
-				<tr><td class="round-bottom" style="background-color:#FFE8D1;"><span class="k1-wert1">PLZ 1</span></td></tr>
+				<tr><td style="background-color:#D9F3FF;"><span class="k1-wert0">Bitte scannen</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#D9F3FF;"><span class="k1-wert1">---</span></td></tr>
 			</table></td>
 			<td><table border="0">
-				<tr><td style="background-color:#E3F2FD;"><span class="k2-wert0">Westersunderberg</span></td></tr>
-				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k2-wert1" >PLZ 2</span></td></tr>
+				<tr><td style="background-color:#E3F2FD;"><span class="k2-wert0">Bitte scannen</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k2-wert1" >---</span></td></tr>
 			</table></td>
 			<td><table border="0">
-				<tr><td style="background-color:#E3F2FD;"><span class="k3-wert0">Westersunderberg</span></td></tr>
-				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k3-wert1">PLZ 3</span></td></tr>
+				<tr><td style="background-color:#E3F2FD;"><span class="k3-wert0">Bitte scannen</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k3-wert1">---</span></td></tr>
 			</table></td>
 			<td><table border="0">
-				<tr><td style="background-color:#E3F2FD;"><span class="k4-wert0">Westersunderberg</span></td></tr>
-				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k4-wert1">PLZ 4</span></td></tr>
+				<tr><td style="background-color:#E3F2FD;"><span class="k4-wert0">Bitte scannen</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#E3F2FD;"><span class="k4-wert1">---</span></td></tr>
 			</table></td>
 			<td><table border="0">
-				<tr><td style="background-color:#FFE8D1;"><span class="k5-wert0">Westersunderberg</span></td></tr>
-				<tr><td class="round-bottom" style="background-color:#FFE8D1;"><span class="k5-wert1">PLZ 5</span></td></tr>
+				<tr><td style="background-color:#D9F3FF;"><span class="k5-wert0">Bitte scannen</span></td></tr>
+				<tr><td class="round-bottom" style="background-color:#D9F3FF;"><span class="k5-wert1">---</span></td></tr>
 			</table></td>
 		</tr>
 		<tr style="border-top: 5px solid white;">
@@ -364,7 +356,7 @@ function starteScan(kartenNummer) {
                 document.getElementById('result-text').innerText = "Status: Karte " + kartenNummer + " erledigt.";
 
                 // AUTOMATIK-LOGIK:
-                // Wenn wir noch nicht bei Karte 5 sind, starte nach 500ms die nächste Karte
+                // Wenn wir noch nicht bei Karte 5 sind, starte nach 1000ms die nächste Karte
                 if (kartenNummer < 5) {
                     setTimeout(() => {
                         starteScan(kartenNummer + 1);
@@ -400,5 +392,4 @@ document.getElementById('neu').onclick = () => location.reload();
 </script>
 
 </body>
-
 </html>
