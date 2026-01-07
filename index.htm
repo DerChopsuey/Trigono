@@ -14,6 +14,7 @@
 	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2254%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>T</text></svg>">
 	<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2254%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>T</text></svg>">
 	<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Trigono%22,%22short_name%22:%22Trigono%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23007bff%22,%22icons%22:[{%22src%22:%22data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIwIiBmaWxsPSIjMDA3YmZmIi8+PHRleHQgeD0iNTAlIiB5PSI1NCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0Pjwvc3ZnPg==%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any%20maskable%22}]}">
+
 	<!--
 	<style>
         #reader { width: 100%; max-width: 500px; margin-bottom: 20px; background: #f0f0f0; }
@@ -193,6 +194,7 @@
     }
     button:active { background-color: #0056b3; }
     #neu { background-color: #dc3545; margin-top: 0px; }
+	#map { background-color: #53b043; margin-top: 0px; }
 	
 	#stop-btn {
 	/* Dauerhafter Platzhalter */
@@ -279,14 +281,15 @@
 			<td colspan="5" id="sum-all" style="background-color:#D4EDDA; font-size:15px;">Gesamtstrecke: 0.00 km</td>
 		</tr>
 		<tr>
-			<td style="padding: 2px;"><button id="K1" style="height:60px;">Scan</button></td>
-			<td style="padding: 2px;"><button id="K2" style="height:60px;">Scan</button></td>
-			<td style="padding: 2px;"><button id="K3" style="height:60px;">Scan</button></td>
-			<td style="padding: 2px;"><button id="K4" style="height:60px;">Scan</button></td>
-			<td style="padding: 2px;"><button id="K5" style="height:60px;">Scan</button></td>
+			<td style="padding: 2px;"><button id="K1" style="height:70px; padding:0px;">Scan</br><img src="./gfx/qr.png" style="height: 35px; width: auto;"></img></button></td>
+			<td style="padding: 2px;"><button id="K2" style="height:70px; padding:0px;">Scan</br><img src="./gfx/qr.png" style="height: 35px; width: auto;"></img></button></td>
+			<td style="padding: 2px;"><button id="K3" style="height:70px; padding:0px;">Scan</br><img src="./gfx/qr.png" style="height: 35px; width: auto;"></img></button></td>
+			<td style="padding: 2px;"><button id="K4" style="height:70px; padding:0px;">Scan</br><img src="./gfx/qr.png" style="height: 35px; width: auto;"></img></button></td>
+			<td style="padding: 2px;"><button id="K5" style="height:70px; padding:0px;">Scan</br><img src="./gfx/qr.png" style="height: 35px; width: auto;"></img></button></td>
 		</tr>
 		<tr>
-			<td colspan="5" style="vertical-align: top; padding: 0;"><button id="neu">Neue Route</button></td>
+			<td colspan="3" style="vertical-align: top; padding: 2px;"><button id="neu">Neue Route</button></td>
+			<td colspan="2" style="vertical-align: top; padding: 2px;"><button id="map">Karte</button></td>
 		</tr>
 	</table>
 </div>
@@ -338,10 +341,6 @@ function starteScan(kartenNummer) {
         },
 	
 		
-		
-		
-		
-		
         (decodedText) => {
             const daten = decodedText.split(';');
             if(daten.length >= 4) {
@@ -378,6 +377,40 @@ function starteScan(kartenNummer) {
     });
 }
 
+
+function zeigeKarte() {
+    const baseUrl = "./map.htm";
+    
+    // Wir filtern das Array, um nur existierende Koordinaten zu zählen
+    const gescanntAnzahl = koordinaten.filter(k => k && k.lat && k.lon).length;
+
+    // Nur ausführen, wenn genau 5 Karten gescannt wurden
+    if (gescanntAnzahl === 5) {
+        let p = koordinaten
+            .map((k, index) => `${index + 1},${k.lat},${k.lon}`)
+            .join('|');
+
+        window.open(`${baseUrl}?p=${p}`, '_blank');
+    } else {
+        // Optionale Rückmeldung an den User
+        document.getElementById('result-text').innerText = "Status: Es müssen erst alle Karten gescannt werden!";
+    }
+}
+
+// Button-Event verknüpfen
+document.getElementById('map').onclick = zeigeKarte;
+
+
+
+
+
+
+
+
+
+
+
+
 // Funktion zum sauberen Schließen
 function beendeScan() {
     html5QrCode.stop().then(() => {
@@ -400,6 +433,4 @@ document.getElementById('neu').onclick = () => location.reload();
 </script>
 
 </body>
-
 </html>
-

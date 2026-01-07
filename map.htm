@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    	<title>Trigono</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#E3F2FD"> <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="#E3F2FD">
+
+	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2254%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>T</text></svg>">
+	<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23007bff%22/><text x=%2250%%22 y=%2254%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>T</text></svg>">
+	<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Trigono%22,%22short_name%22:%22Trigono%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23007bff%22,%22icons%22:[{%22src%22:%22data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIwIiBmaWxsPSIjMDA3YmZmIi8+PHRleHQgeD0iNTAlIiB5PSI1NCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0Pjwvc3ZnPg==%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any%20maskable%22}]}">
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { height: 100vh; width: 100%; }
+        .info-label { font-family: sans-serif; background: white; padding: 5px; border-radius: 3px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        // Karte initialisieren
+        var map = L.map('map').setView([53.55, 10.00], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Parameter aus der URL lesen
+        var params = new URLSearchParams(window.location.search).get('p');
+        
+        if (params) {
+            var points = params.split('|');
+            var latLngs = []; // Array für die Linie
+
+            points.forEach(function(point) {
+                var data = point.split(',');
+                var name = data[0];
+                var lat = parseFloat(data[1]);
+                var lon = parseFloat(data[2]);
+
+                if (!isNaN(lat) && !isNaN(lon)) {
+                    var pos = [lat, lon];
+                    latLngs.push(pos);
+                    
+                    // Marker hinzufügen
+                    L.marker(pos).addTo(map)
+                        .bindPopup("<b>Punkt " + name + "</b>")
+                        .bindTooltip(name, {permanent: true, direction: 'top'});
+                }
+            });
+
+            // Die rote Luftlinie zeichnen
+            if (latLngs.length > 1) {
+                var polyline = L.polyline(latLngs, {
+                    color: 'red',
+                    weight: 4,
+                    opacity: 0.7,
+                    dashArray: '10, 10', // Gestrichelte Linie für Luftlinie-Optik
+                    lineJoin: 'round'
+                }).addTo(map);
+
+                // Zoom automatisch so anpassen, dass die ganze Strecke drauf ist
+                map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
+            }
+        }
+    </script>
+</body>
+</html>
