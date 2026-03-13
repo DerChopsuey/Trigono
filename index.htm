@@ -297,7 +297,7 @@ const html5QrCode = new Html5Qrcode("reader");
 let koordinaten = [null, null, null, null, null];
 let teilstrecken = [0, 0, 0, 0]; 
 
-// Die Haversine-Formel zur Distanzberechnung
+//  Haversine-Formel zur Distanzberechnung
 function berechneDistanz(punkt1, punkt2) {
     if (!punkt1 || !punkt2) return 0;
     const R = 6371; 
@@ -322,7 +322,7 @@ function updateSummen() {
     document.getElementById('sum-all').innerText = "Gesamtstrecke: " + gesamt.toFixed(2) + " km";
 }
 
-// DIE ZENTRALE FUNKTION
+// ZENTRALE FUNKTION
 function starteScan(kartenNummer) {
     document.getElementById('stop-btn').classList.add('visible');
     document.getElementById('result-text').innerText = "Status: Suche QR-Code für Karte " + kartenNummer + "...";
@@ -330,7 +330,7 @@ function starteScan(kartenNummer) {
     html5QrCode.start(
         { facingMode: "environment" }, 
 		{ 
-            fps: 15, // Etwas flüssiger
+            fps: 15, // Scan geschwindigkeit
             qrbox: { width: 200, height: 200 },
             aspectRatio: 1.0 // ZWINGT das Video in ein Quadrat
         },
@@ -381,14 +381,13 @@ function zeigeKarte() {
     if (gescanntAnzahl === 5) {
         let p = koordinaten
             .map((k, index) => {
-                // Wir bauen: "1 - Stadtname,Lat,Lon"
-                // encodeURIComponent macht den Namen URL-sicher
+			// URL Zusammenbauen:
                 const label = encodeURIComponent((index + 1) + " - " + k.name);
                 return `${label},${k.lat},${k.lon}`;
             })
             .join('|');
 
-        window.open(`${baseUrl}?p=${p}`, '_blank');
+        window.open(`${baseUrl}?p=${p}`, 'trigono_map'); 
     } else {
         document.getElementById('result-text').innerText = "Status: Es müssen erst alle Karten gescannt werden!";
     }
