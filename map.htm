@@ -26,9 +26,11 @@
     <script>
         // Karte initialisieren
         var map = L.map('map').setView([53.55, 10.00], 11);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+		L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+			attribution: '© OpenStreetMap contributors © CARTO',
+			subdomains: 'abcd',
+			maxZoom: 20
+		}).addTo(map);
 
         // Parameter aus der URL lesen
         var params = new URLSearchParams(window.location.search).get('p');
@@ -69,5 +71,7 @@
             }
         }
     </script>
+	
+
 </body>
 </html>
